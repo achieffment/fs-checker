@@ -1,6 +1,6 @@
-"""Чтение и классификация правил из файла .fs-rule.
+"""Чтение и классификация правил из файла .fs-check.
 
-`.fs-rule` оформляется в стиле .gitignore, но с инвертированным смыслом: строки
+`.fs-check` оформляется в стиле .gitignore, но с инвертированным смыслом: строки
 описывают пути, которые ОБЯЗАНЫ существовать. Файл делится на два класса строк:
 
 - положительные правила -> разбираются на префикс (якори) и последний сегмент
@@ -24,7 +24,7 @@ from .pathspec_compat import _FACTORY
 
 
 class FsRuleError(Exception):
-    """Файл .fs-rule отсутствует или не читается (некорректный запуск)."""
+    """Файл .fs-check отсутствует или не читается (некорректный запуск)."""
 
 
 def _rstrip_rule(line: str) -> str:
@@ -92,26 +92,26 @@ class Negation:
 
 @dataclass(frozen=True)
 class FsRule:
-    """Результат разбора .fs-rule: положительные правила + спека негативов."""
+    """Результат разбора .fs-check: положительные правила + спека негативов."""
 
     rules: tuple[Rule, ...]
     negation: Negation
 
 
 def load_fs_rule(root: Path) -> FsRule:
-    """Читает .fs-rule из корня проверки (`utf-8-sig` — BOM проглатывается).
+    """Читает .fs-check из корня проверки (`utf-8-sig` — BOM проглатывается).
 
     Нет файла -> FsRuleError (некорректный запуск). Пропуск
     комментариев (ведущий `#`) и пустых строк делает сам этот разбор для ВСЕГО файла
     (до классификации) — в pathspec уходят только `!`-шаблоны без ведущего `!`.
     """
-    path = root / ".fs-rule"
+    path = root / ".fs-check"
     if not path.is_file():
-        raise FsRuleError(f"в выбранном каталоге нет файла .fs-rule: {path}")
+        raise FsRuleError(f"в выбранном каталоге нет файла .fs-check: {path}")
     try:
         raw = path.read_text(encoding="utf-8-sig")
     except OSError as exc:
-        raise FsRuleError(f"не удалось прочитать .fs-rule: {exc}") from exc
+        raise FsRuleError(f"не удалось прочитать .fs-check: {exc}") from exc
 
     rules: list[Rule] = []
     negatives: list[str] = []

@@ -1,4 +1,4 @@
-"""Тесты разбора .fs-rule (checker.rule)."""
+"""Тесты разбора .fs-check (checker.rule)."""
 from collections.abc import Callable
 from pathlib import Path
 
@@ -84,7 +84,7 @@ def test_no_negatives_prunes_nothing(write_rule: Callable[[str], Path]) -> None:
 
 
 def test_utf8_sig_bom_does_not_break_first_line(tmp_path: Path) -> None:
-    (tmp_path / ".fs-rule").write_text("/Activities\n", encoding="utf-8-sig")
+    (tmp_path / ".fs-check").write_text("/Activities\n", encoding="utf-8-sig")
     rule = load_fs_rule(tmp_path).rules[0]
     assert rule.mandate == "Activities"  # BOM не прилип к первому сегменту
 

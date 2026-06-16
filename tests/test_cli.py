@@ -37,7 +37,7 @@ def test_not_a_directory(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys
 def test_missing_fs_rule(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     code = _run(monkeypatch, str(tmp_path))
     assert code == 1
-    assert ".fs-rule" in capsys.readouterr().err
+    assert ".fs-check" in capsys.readouterr().err
 
 
 def test_no_violations_returns_zero(
@@ -46,7 +46,7 @@ def test_no_violations_returns_zero(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     root = make_tree(["Activities/Web/Projects/"])
-    (root / ".fs-rule").write_text("/Activities/Web/Projects\n", encoding="utf-8")
+    (root / ".fs-check").write_text("/Activities/Web/Projects\n", encoding="utf-8")
     code = _run(monkeypatch, str(root))
     out = capsys.readouterr().out
     assert code == 0
@@ -59,7 +59,7 @@ def test_violations_return_two(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     root = make_tree(["Activities/Web/"])
-    (root / ".fs-rule").write_text("/Activities/Web/Projects\n", encoding="utf-8")
+    (root / ".fs-check").write_text("/Activities/Web/Projects\n", encoding="utf-8")
     code = _run(monkeypatch, str(root))
     out = capsys.readouterr().out
     assert code == 2
@@ -74,7 +74,7 @@ def test_argument_bypasses_picker(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     root = make_tree(["Activities/Web/Projects/"])
-    (root / ".fs-rule").write_text("/Activities/Web/Projects\n", encoding="utf-8")
+    (root / ".fs-check").write_text("/Activities/Web/Projects\n", encoding="utf-8")
 
     def _boom() -> str:
         raise AssertionError("pick_directory не должен вызываться при аргументе-каталоге")
@@ -91,7 +91,7 @@ def test_missing_writes_log_and_sends_webhook(
     make_tree: Callable[[Iterable[str]], Path],
 ) -> None:
     root = make_tree(["Activities/Web/"])
-    (root / ".fs-rule").write_text("/Activities/Web/Projects\n", encoding="utf-8")
+    (root / ".fs-check").write_text("/Activities/Web/Projects\n", encoding="utf-8")
     sent: list[str] = []
     monkeypatch.setattr(cli, "pick_directory", lambda: str(root))
     monkeypatch.setattr(cli, "send_webhook", lambda text: bool(sent.append(text)) or True)
@@ -108,7 +108,7 @@ def test_no_violations_no_log_no_webhook(
     make_tree: Callable[[Iterable[str]], Path],
 ) -> None:
     root = make_tree(["Activities/Web/Projects/"])
-    (root / ".fs-rule").write_text("/Activities/Web/Projects\n", encoding="utf-8")
+    (root / ".fs-check").write_text("/Activities/Web/Projects\n", encoding="utf-8")
     sent: list[str] = []
     monkeypatch.setattr(cli, "pick_directory", lambda: str(root))
     monkeypatch.setattr(cli, "send_webhook", lambda text: bool(sent.append(text)) or True)

@@ -61,7 +61,7 @@ def _selected_names(prefix: tuple[str, ...], parts: tuple[str, ...]) -> list[str
 
 
 class FsChecker:
-    """Проверка структуры по правилам `.fs-rule` (read-only)."""
+    """Проверка структуры по правилам `.fs-check` (read-only)."""
 
     def __init__(self, fs_rule: FsRule):
         self._rules = fs_rule.rules

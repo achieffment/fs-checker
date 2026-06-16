@@ -14,7 +14,7 @@ from .rule import FsRuleError, load_fs_rule
 
 
 def _parse_args(argv: list[str] | None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Проверка наличия папок и файлов по правилам .fs-rule (рекурсивно). Без аргумента каталог выбирается интерактивно (диалог проводника на Windows и в WSL, диалог macOS, либо ввод пути в терминале на обычном Linux). Каталог можно задать аргументом — для запуска по таймеру (cron/планировщик) без диалога.")
+    parser = argparse.ArgumentParser(description="Проверка наличия папок и файлов по правилам .fs-check (рекурсивно). Без аргумента каталог выбирается интерактивно (диалог проводника на Windows и в WSL, диалог macOS, либо ввод пути в терминале на обычном Linux). Каталог можно задать аргументом — для запуска по таймеру (cron/планировщик) без диалога.")
     parser.add_argument(
         "path",
         nargs="?",
